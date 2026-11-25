@@ -1,0 +1,2191 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test Intensivo Docker (UD02) — 105 Preguntas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            docker: {
+              light: '#0db7ed',
+              DEFAULT: '#2496ed',
+              dark: '#1d63ed',
+            },
+            surface: {
+              bg: '#0b0f19',
+              card: '#111827',
+              hover: '#1f2937',
+              border: '#1e293b',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+    }
+    code, .code-inline {
+      font-family: 'JetBrains Mono', monospace;
+      background-color: rgba(13, 183, 237, 0.12);
+      color: #38bdf8;
+      padding: 0.12rem 0.38rem;
+      border-radius: 0.35rem;
+      font-size: 0.875em;
+    }
+    /* Custom scrollbar for filter pills */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-docker/30 selection:text-white">
+
+  <!-- Top Sticky Header -->
+  <header class="sticky top-0 z-30 bg-[#0b0f19]/90 backdrop-blur-md border-b border-slate-800/80">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand / Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-docker/15 border border-docker/40 flex items-center justify-center text-docker-light">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.184-.186h-2.12a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 00-.75.748 11.376 11.376 0 00.692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 003.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold text-white tracking-tight">UD02 · Contenedores (Docker)</h1>
+          <p class="text-xs text-slate-400">Banco de 105 preguntas tipo test</p>
+        </div>
+      </div>
+
+      <!-- Countdown & Stats -->
+      <div class="flex items-center gap-2 sm:gap-4">
+        <!-- Countdown to 15:00 -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <div class="text-xs">
+            <span class="text-slate-400 hidden sm:inline">Examen 15:00 · </span>
+            <span id="countdown-timer" class="font-mono font-semibold text-amber-300">--:--:--</span>
+          </div>
+        </div>
+
+        <!-- Accuracy & Streak -->
+        <div class="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs">
+          <div title="Porcentaje de acierto">
+            <span class="text-slate-400">Acierto:</span>
+            <span id="stat-accuracy" class="font-mono font-semibold text-emerald-400">0%</span>
+          </div>
+          <div class="h-3 w-px bg-slate-700"></div>
+          <div title="Racha actual de aciertos">
+            <span class="text-slate-400">Racha:</span>
+            <span id="stat-streak" class="font-mono font-semibold text-docker-light">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Progress Bar -->
+    <div class="w-full bg-slate-900 h-1.5">
+      <div id="global-progress-bar" class="bg-gradient-to-r from-docker-dark to-docker-light h-1.5 transition-all duration-300" style="width: 0%"></div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 flex flex-col gap-5">
+
+    <!-- Mode Switcher & Reset Controls -->
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div class="inline-flex p-1 rounded-xl bg-slate-900 border border-slate-800">
+        <button id="btn-mode-practice" onclick="setMode('practice')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all bg-docker text-white shadow-sm">
+          Práctica Rápida (105)
+        </button>
+        <button id="btn-mode-exam" onclick="setMode('exam')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-400 hover:text-white transition-all">
+          Simulacro Examen (20 aleatorias)
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span id="progress-label" class="text-xs text-slate-400 font-mono">0 / 105 respondidas</span>
+        <button onclick="openResetModal()" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-rose-400 bg-slate-900 hover:bg-rose-950/30 border border-slate-800 hover:border-rose-800/50 transition-colors">
+          Reiniciar progreso
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Filters (Hidden during active 20-question exam) -->
+    <div id="category-bar" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+      <!-- Filter pills injected dynamically -->
+    </div>
+
+    <!-- Question Arena / Exam Result Container -->
+    <div id="app-container" class="flex-1 flex flex-col">
+      <!-- Dynamic Question Card or Exam Summary -->
+    </div>
+
+    <!-- Keyboard Shortcuts Helper -->
+    <div id="shortcuts-bar" class="mt-auto pt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 border-t border-slate-800/60">
+      <div class="flex flex-wrap items-center gap-3">
+        <span>Atajos teclado:</span>
+        <span><kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">1-4</kbd> o <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">A-D</kbd> Responder</span>
+        <span><kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">Enter</kbd> / <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">→</kbd> Siguiente</span>
+        <span><kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">←</kbd> Anterior</span>
+      </div>
+      <span class="text-slate-500">UD02 Sistemas Informáticos</span>
+    </div>
+  </main>
+
+  <!-- Custom Confirmation Modal (No native confirm/alert) -->
+  <div id="reset-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl">
+      <h3 class="text-lg font-bold text-white mb-2">¿Reiniciar todo el progreso?</h3>
+      <p class="text-sm text-slate-400 mb-6">Se borrarán tus respuestas guardadas, tu porcentaje de acierto y la lista de preguntas falladas.</p>
+      <div class="flex justify-end gap-3">
+        <button onclick="closeResetModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 transition-colors">
+          Cancelar
+        </button>
+        <button onclick="confirmResetProgress()" class="px-4 py-2 rounded-xl text-sm font-medium text-white bg-rose-600 hover:bg-rose-500 transition-colors">
+          Sí, reiniciar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // BANCO DE 105 PREGUNTAS BASADAS ESTRICTAMENTE EN EL PDF UD02 - DOCKER
+    // =========================================================================
+    const QUESTIONS = [
+      // --- BLOQUE 1: CONCEPTOS, HISTORIA Y OCI (15 preguntas) ---
+      {
+        id: 1,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿Qué es un contenedor según la introducción del tema?",
+        opts: [
+          "Una máquina virtual completa que emula una placa base y un disco duro físico.",
+          "Una unidad ligera y portátil que empaqueta una aplicación con todo lo que necesita para ejecutarse, aislándola mediante mecanismos del kernel.",
+          "Un hipervisor de tipo 1 que se instala directamente sobre el hardware sin sistema operativo anfitrión.",
+          "Un compilador multiplataforma que traduce código Python y Java a binario nativo."
+        ],
+        ans: 1,
+        exp: "Un contenedor empaqueta la app y sus dependencias (binarios, librerías, variables, configuración) aislándola mediante mecanismos del kernel."
+      },
+      {
+        id: 2,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿Qué dos mecanismos del kernel de Linux permiten aislar contenedores y limitar sus recursos?",
+        opts: [
+          "iptables y systemd",
+          "namespaces y cgroups",
+          "chroot y SELinux",
+          "KVM y libvirt"
+        ],
+        ans: 1,
+        exp: "En Linux, los contenedores se aíslan del resto del sistema mediante <code>namespaces</code> (aislamiento) y <code>cgroups</code> (control de recursos)."
+      },
+      {
+        id: 3,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿Qué tecnología previa a Docker ya permitía la virtualización a nivel de sistema operativo en Linux?",
+        opts: [
+          "VMware ESXi",
+          "LXC (Linux Containers)",
+          "VirtualBox",
+          "Hyper-V"
+        ],
+        ans: 1,
+        exp: "Antes de Docker existían tecnologías como <code>LXC (Linux Containers)</code>; Docker las popularizó al facilitar la creación, distribución y ejecución."
+      },
+      {
+        id: 4,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿En qué año fue lanzado Docker por la empresa Docker, Inc.?",
+        opts: [
+          "2010",
+          "2013",
+          "2015",
+          "2017"
+        ],
+        ans: 1,
+        exp: "Docker fue lanzado en <code>2013</code> por Docker, Inc., convirtiéndose rápidamente en un estándar de facto."
+      },
+      {
+        id: 5,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿Qué elemento comparten todos los contenedores que se ejecutan sobre un mismo servidor anfitrión (host)?",
+        opts: [
+          "El mismo sistema operativo invitado (Guest OS) completo.",
+          "El mismo kernel del sistema operativo del host.",
+          "La misma dirección IP pública y el mismo espacio de procesos sin aislamiento.",
+          "El mismo archivo Dockerfile."
+        ],
+        ans: 1,
+        exp: "Cada contenedor tiene su propio sistema de archivos y librerías, pero comparte el mismo <code>kernel del SO del host</code>."
+      },
+      {
+        id: 6,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿Qué pieza arquitectónica sustituye al 'Hypervisor + Guest OS' de las máquinas virtuales en el modelo de contenedores?",
+        opts: [
+          "La BIOS virtualizada (AMI).",
+          "El Container Engine sobre el Operating System del host.",
+          "Un segundo kernel emulado en espacio de usuario.",
+          "El gestor de paquetes apt."
+        ],
+        ans: 1,
+        exp: "En las VMs hay <code>Hypervisor + Guest OS</code> por cada app; en contenedores hay un <code>Container Engine</code> sobre el SO anfitrión."
+      },
+      {
+        id: 7,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿Por qué los contenedores arrancan mucho más rápido y consumen menos recursos que las máquinas virtuales?",
+        opts: [
+          "Porque no necesitan memoria RAM para ejecutar procesos.",
+          "Porque eliminan la carga de arrancar un sistema operativo completo y una capa de virtualización de hardware.",
+          "Porque ejecutan el código directamente sin pasar por el kernel.",
+          "Porque solo permiten ejecutar scripts en lenguaje Bash."
+        ],
+        ans: 1,
+        exp: "Al eliminar la carga de un SO invitado completo y la emulación de hardware del hipervisor, arrancan en segundos y aprovechan mejor el hardware."
+      },
+      {
+        id: 8,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿Qué significan las siglas OCI y cuál es su propósito?",
+        opts: [
+          "Open Cloud Infrastructure: crear un proveedor de nube gratuito.",
+          "Open Container Initiative: establecer una especificación común para formatos de imagen y runtimes de contenedores.",
+          "Operating Container Interface: sustituir el terminal de Linux por una interfaz web.",
+          "Official Container Index: el buscador interno de Docker Hub."
+        ],
+        ans: 1,
+        exp: "<code>OCI (Open Container Initiative)</code> nació en 2015 para estandarizar formatos de imagen y runtimes y garantizar interoperabilidad."
+      },
+      {
+        id: 9,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿En qué año nació la Open Container Initiative (OCI) y qué empresas la impulsaron?",
+        opts: [
+          "2013; únicamente Docker y Microsoft.",
+          "2015; un consorcio que incluye a Docker, CoreOS, Google, Red Hat y VMware.",
+          "2018; Apple, Amazon y Canonical.",
+          "2011; Linux Foundation y Oracle en solitario."
+        ],
+        ans: 1,
+        exp: "OCI nació en <code>2015</code> impulsada por líderes como Docker, CoreOS, Google, Red Hat y VMware."
+      },
+      {
+        id: 10,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿Para cuál de los siguientes casos de uso NO son la mejor opción los contenedores?",
+        opts: [
+          "Arquitecturas de microservicios y APIs.",
+          "Pipelines de CI/CD (Integración y Despliegue Continuo).",
+          "Aplicaciones móviles o aplicaciones de escritorio con interfaz gráfica (UI) nativa.",
+          "Bases de datos y trabajos por lotes (batch jobs)."
+        ],
+        ans: 2,
+        exp: "Según el temario, los contenedores NO son recomendables para <code>apps móviles</code> ni para <code>apps de escritorio con UI nativa</code>."
+      },
+      {
+        id: 11,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿Qué relación existe entre una 'Imagen' y un 'Contenedor'?",
+        opts: [
+          "Son exactamente lo mismo; ambos términos son sinónimos.",
+          "La imagen es la plantilla inmutable y el contenedor es la instancia en ejecución de dicha imagen.",
+          "El contenedor es el archivo de texto y la imagen es el proceso en memoria.",
+          "Una imagen solo puede instanciar un único contenedor a la vez."
+        ],
+        ans: 1,
+        exp: "La <code>imagen</code> es un artefacto binario inmutable (plantilla) y el <code>contenedor</code> es cada instancia en ejecución creada a partir de ella."
+      },
+      {
+        id: 12,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿Qué ocurre cuando termina el comando principal para el que se lanzó un contenedor?",
+        opts: [
+          "El contenedor abre automáticamente una consola bash.",
+          "El contenedor finaliza y pasa a estado detenido (Exited).",
+          "La imagen base se elimina del disco duro.",
+          "El contenedor se reinicia indefinidamente por defecto."
+        ],
+        ans: 1,
+        exp: "Un contenedor se lanza para cumplir un comando principal; cuando ese comando termina, el contenedor también finaliza."
+      },
+      {
+        id: 13,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿Cuál de los siguientes elementos NO forma parte de una imagen de contenedor?",
+        opts: [
+          "La aplicación y sus librerías de lenguaje (ej. numpy, pandas).",
+          "Librerías de sistema operativo necesarias (ej. curl, wget).",
+          "La configuración de arranque (usuario, comando, puertos expuestos).",
+          "Los datos dinámicos generados por los usuarios en tiempo real en otro servidor."
+        ],
+        ans: 3,
+        exp: "Una imagen contiene aplicación, librerías de lenguaje, librerías básicas de SO y configuración de arranque, no datos dinámicos externos."
+      },
+      {
+        id: 14,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿Cuál es una buena práctica fundamental respecto al estado de las imágenes?",
+        opts: [
+          "Modificar siempre las imágenes en caliente mientras los usuarios usan la app.",
+          "Que las imágenes sean estáticas e inmutables y no dependan del estado de un contenedor concreto.",
+          "Guardar todas las contraseñas de producción dentro de la imagen.",
+          "Evitar el uso de imágenes oficiales para reducir seguridad."
+        ],
+        ans: 1,
+        exp: "Las imágenes deben ser estáticas e inmutables para garantizar que se comporten exactamente igual en cualquier entorno."
+      },
+      {
+        id: 15,
+        cat: "1. Conceptos, Historia y OCI",
+        q: "¿Cuál de los siguientes NO es un registro de imágenes alternativo compatible con el estándar OCI?",
+        opts: [
+          "GitHub Container Registry (GHCR)",
+          "Amazon ECR",
+          "Google Artifact Registry",
+          "Docker Compose YAML"
+        ],
+        ans: 3,
+        exp: "GHCR, GitLab Registry, Amazon ECR y Google Artifact Registry son registries OCI; <code>compose.yaml</code> es un fichero de orquestación."
+      },
+
+      // --- BLOQUE 2: INSTALACIÓN: DESKTOP VS ENGINE (10 preguntas) ---
+      {
+        id: 16,
+        cat: "2. Instalación: Desktop vs Engine",
+        q: "¿Qué incluye Docker Desktop además del propio motor Docker Engine?",
+        opts: [
+          "Únicamente un compilador de C++ y un servidor Apache.",
+          "Interfaz gráfica (GUI), posibilidad de habilitar Kubernetes, plugins y herramientas de gestión empresarial.",
+          "Una licencia ilimitada gratuita para multinacionales de más de 10.000 empleados.",
+          "Un sistema operativo Windows Server preinstalado."
+        ],
+        ans: 1,
+        exp: "Docker Desktop incluye Docker Engine más interfaz gráfica, soporte integrado de Kubernetes, extensions/plugins y funciones empresariales."
+      },
+      {
+        id: 17,
+        cat: "2. Instalación: Desktop vs Engine",
+        q: "¿En qué condiciones es gratuito el uso de Docker Desktop?",
+        opts: [
+          "Es gratuito para absolutamente cualquier empresa sin límite de facturación.",
+          "Para uso personal y empresas con menos de 250 empleados y menos de 10 millones de dólares de facturación anual.",
+          "Únicamente durante 7 días de prueba.",
+          "Solo si se instala en sistemas operativos macOS."
+        ],
+        ans: 1,
+        exp: "Docker Desktop es gratuito para uso personal y compañías con <code>&lt; 250 empleados</code> y <code>&lt; 10 millones $</code> de facturación anual."
+      },
+      {
+        id: 18,
+        cat: "2. Instalación: Desktop vs Engine",
+        q: "¿Qué característica define a Docker Engine frente a Docker Desktop?",
+        opts: [
+          "Tiene interfaz gráfica avanzada pero solo funciona en Windows.",
+          "Es el motor puro por línea de comandos (sin GUI), gratuito sin límites y se instala únicamente en Linux.",
+          "Requiere obligatoriamente una máquina virtual de VirtualBox en Linux.",
+          "No permite construir imágenes con Dockerfile."
+        ],
+        ans: 1,
+        exp: "<code>Docker Engine</code> es gratuito sin límites, se maneja por CLI (sin GUI) y se instala únicamente en Linux con rendimiento nativo."
+      },
+      {
+        id: 19,
+        cat: "2. Instalación: Desktop vs Engine",
+        q: "¿Dónde se suele utilizar Docker Desktop y dónde Docker Engine?",
+        opts: [
+          "Docker Desktop en servidores de producción y Docker Engine en portátiles Windows.",
+          "Docker Desktop en entornos de desarrollo y Docker Engine en servidores Linux de desarrollo o producción.",
+          "Ambos se usan exclusivamente en teléfonos móviles.",
+          "Docker Engine en macOS y Docker Desktop en servidores sin pantalla."
+        ],
+        ans: 1,
+        exp: "Lo habitual es usar <code>Docker Desktop</code> en equipos de desarrollo y <code>Docker Engine</code> en servidores Linux."
+      },
+      {
+        id: 20,
+        cat: "2. Instalación: Desktop vs Engine",
+        q: "¿Por qué Docker Desktop ejecuta una máquina virtual en Windows y macOS (e incluso en Linux)?",
+        opts: [
+          "Porque Docker está programado en Visual Basic.",
+          "Porque los contenedores dependen de funcionalidades del kernel de Linux (y en Linux Docker Desktop usa VM por uniformidad y compatibilidad con plugins).",
+          "Para impedir que los contenedores accedan a Internet.",
+          "Porque el comando docker run solo existe dentro de máquinas virtuales."
+        ],
+        ans: 1,
+        exp: "Los contenedores requieren el kernel de Linux; en Linux, instalar solo <code>Docker Engine</code> evita la VM y da rendimiento nativo."
+      },
+      {
+        id: 21,
+        cat: "2. Instalación: Desktop vs Engine",
+        q: "¿Qué comando descarga y ejecuta el script oficial de instalación de Docker Engine en Linux?",
+        opts: [
+          "<code>docker install --engine-linux</code>",
+          "<code>curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh</code>",
+          "<code>apt-get install docker-desktop-gui</code>",
+          "<code>sh https://hub.docker.com/install.bin</code>"
+        ],
+        ans: 1,
+        exp: "El script oficial se descarga con <code>curl -fsSL https://get.docker.com -o get-docker.sh</code> y se ejecuta con <code>sh get-docker.sh</code> (como root/sudo)."
+      },
+      {
+        id: 22,
+        cat: "2. Instalación: Desktop vs Engine",
+        q: "¿Qué permisos son necesarios para ejecutar el script de instalación <code>get-docker.sh</code> en Linux?",
+        opts: [
+          "Permisos de usuario invitado sin contraseña.",
+          "Permisos de root o anteponer sudo al ejecutar el script.",
+          "Permisos de lectura en la carpeta /home únicamente.",
+          "No requiere ningún permiso especial en el sistema."
+        ],
+        ans: 1,
+        exp: "Debes lanzarlo con permisos de <code>root</code> o anteponer <code>sudo</code> al comando <code>sh get-docker.sh</code>."
+      },
+      {
+        id: 23,
+        cat: "2. Instalación: Desktop vs Engine",
+        q: "¿Qué comando permite verificar rápidamente la versión instalada del cliente/motor Docker?",
+        opts: [
+          "<code>docker check</code>",
+          "<code>docker --version</code>",
+          "<code>docker status</code>",
+          "<code>docker about</code>"
+        ],
+        ans: 1,
+        exp: "<code>docker --version</code> (o <code>docker version</code>) muestra la versión de Docker instalada."
+      },
+      {
+        id: 24,
+        cat: "2. Instalación: Desktop vs Engine",
+        q: "¿Cuál es el contenedor de prueba oficial que recomienda el temario para comprobar que toda la instalación funciona?",
+        opts: [
+          "<code>docker run test-linux</code>",
+          "<code>docker run hello-world</code>",
+          "<code>docker run alpine-check</code>",
+          "<code>docker run ping-docker</code>"
+        ],
+        ans: 1,
+        exp: "<code>docker run hello-world</code> descarga la imagen de prueba, crea un contenedor, imprime el mensaje de bienvenida y termina."
+      },
+      {
+        id: 25,
+        cat: "2. Instalación: Desktop vs Engine",
+        q: "Cuando ejecutas <code>docker run hello-world</code> por primera vez, ¿qué pasos realiza Docker?",
+        opts: [
+          "Compila el kernel de Linux desde cero y reinicia el equipo.",
+          "Contacta con el Docker daemon, descarga la imagen desde Docker Hub, crea el contenedor y muestra su salida por terminal.",
+          "Instala Ubuntu 22.04 completo en el disco duro.",
+          "Abre el navegador web en http://localhost:80."
+        ],
+        ans: 1,
+        exp: "El cliente contacta al daemon, hace pull de <code>hello-world</code>, crea el contenedor, ejecuta el binario y envía el texto al terminal."
+      },
+
+      // --- BLOQUE 3: EJECUCIÓN Y GESTIÓN DE CONTENEDORES (25 preguntas) ---
+      {
+        id: 26,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué sucede si ejecutas <code>docker run nginx</code> sin tener la imagen <code>nginx</code> descargada previamente en local?",
+        opts: [
+          "Docker muestra un error indicando que debes ejecutar docker pull primero.",
+          "Docker busca la imagen en el registro por defecto (Docker Hub), la descarga automáticamente y arranca el contenedor.",
+          "Docker crea una imagen vacía sin servidor web.",
+          "Docker pide confirmación interactiva antes de descargar cada capa."
+        ],
+        ans: 1,
+        exp: "Si no encuentra la imagen en local, <code>docker run</code> la descarga automáticamente desde Docker Hub y arranca el contenedor."
+      },
+      {
+        id: 27,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué opción de <code>docker run</code> ejecuta el contenedor en segundo plano (modo detached) sin bloquear la terminal?",
+        opts: [
+          "<code>-b</code>",
+          "<code>-d</code>",
+          "<code>-q</code>",
+          "<code>-s</code>"
+        ],
+        ans: 1,
+        exp: "La opción <code>-d</code> (detached) lanza el contenedor en segundo plano y devuelve el hash/ID del contenedor."
+      },
+      {
+        id: 28,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "Si lanzas un contenedor en primer plano (sin <code>-d</code>), ¿qué ocurre al pulsar <code>Ctrl + C</code>?",
+        opts: [
+          "Se desacopla de la terminal pero el contenedor sigue corriendo.",
+          "Se detiene el contenedor y vuelves al prompt de la terminal.",
+          "Se elimina la imagen del disco duro.",
+          "Se abre una shell bash dentro del contenedor."
+        ],
+        ans: 1,
+        exp: "<code>Ctrl + C</code> envía la señal de interrupción, detiene el contenedor en primer plano y te devuelve el control del terminal."
+      },
+      {
+        id: 29,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué combinación de teclas permite desacoplarte de un contenedor en primer plano SIN detener su ejecución?",
+        opts: [
+          "<code>Ctrl + C</code> seguido de <code>Ctrl + Z</code>",
+          "<code>Ctrl + P</code> seguido de <code>Ctrl + Q</code>",
+          "<code>Alt + F4</code>",
+          "<code>Esc</code> seguido de <code>:q!</code>"
+        ],
+        ans: 1,
+        exp: "Pulsar <code>Ctrl + P</code> y luego <code>Ctrl + Q</code> desacopla el terminal dejando el contenedor activo en segundo plano."
+      },
+      {
+        id: 30,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué comando lista únicamente los contenedores que están actualmente en ejecución?",
+        opts: [
+          "<code>docker ps</code> (o <code>docker container ls</code>)",
+          "<code>docker images</code>",
+          "<code>docker list --all</code>",
+          "<code>docker inspect</code>"
+        ],
+        ans: 0,
+        exp: "<code>docker ps</code> (y su alias moderno <code>docker container ls</code>) muestra solo los contenedores activos."
+      },
+      {
+        id: 31,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué flag debes añadir a <code>docker ps</code> para ver también los contenedores detenidos?",
+        opts: [
+          "<code>-d</code>",
+          "<code>-a</code>",
+          "<code>-f</code>",
+          "<code>-v</code>"
+        ],
+        ans: 1,
+        exp: "<code>docker ps -a</code> (o <code>docker container ls -a</code>) lista todos los contenedores, tanto activos como detenidos."
+      },
+      {
+        id: 32,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Cuántos caracteres del identificador único (CONTAINER ID) muestra por defecto la salida de <code>docker ps</code>?",
+        opts: [
+          "Los 4 primeros caracteres.",
+          "Los 12 primeros caracteres.",
+          "Los 64 caracteres completos del hash SHA256.",
+          "Solo 2 caracteres numéricos."
+        ],
+        ans: 1,
+        exp: "Aunque el ID interno es un hash largo, <code>docker ps</code> muestra normalmente los <code>12 primeros caracteres</code>."
+      },
+      {
+        id: 33,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Es necesario escribir los 12 caracteres completos del CONTAINER ID en comandos como <code>docker stop</code> o <code>docker rm</code>?",
+        opts: [
+          "Sí, si falta un carácter el comando falla siempre.",
+          "No, basta con indicar un prefijo único del ID (las primeras letras/números) o el nombre del contenedor.",
+          "Solo se puede usar el nombre aleatorio, nunca el ID.",
+          "Sí, y además hay que escribirlo en mayúsculas."
+        ],
+        ans: 1,
+        exp: "Docker permite referenciar contenedores usando un <code>prefijo del ID</code> (ej. <code>docker stop e92</code>) siempre que no sea ambiguo."
+      },
+      {
+        id: 34,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué flag de <code>docker run</code> elimina automáticamente el contenedor en cuanto se detiene?",
+        opts: [
+          "<code>--delete</code>",
+          "<code>--rm</code>",
+          "<code>--prune</code>",
+          "<code>--temp</code>"
+        ],
+        ans: 1,
+        exp: "<code>--rm</code> borra automáticamente el contenedor al detenerse, ideal para tareas puntuales de un solo uso."
+      },
+      {
+        id: 35,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué flag de <code>docker run</code> permite cargar múltiples variables de entorno desde un fichero (estilo <code>.env</code>)?",
+        opts: [
+          "<code>--vars-file</code>",
+          "<code>--env-file</code>",
+          "<code>--config</code>",
+          "<code>--import-env</code>"
+        ],
+        ans: 1,
+        exp: "<code>--env-file RUTA</code> carga un fichero con variables de entorno (una por línea) al crear el contenedor."
+      },
+      {
+        id: 36,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Cómo puedes consultar los registros (logs) de un contenedor en segundo plano y seguirlos en tiempo real?",
+        opts: [
+          "<code>docker logs -f &lt;contenedor&gt;</code>",
+          "<code>docker watch &lt;contenedor&gt;</code>",
+          "<code>docker ps -f &lt;contenedor&gt;</code>",
+          "<code>docker tail &lt;contenedor&gt;</code>"
+        ],
+        ans: 0,
+        exp: "<code>docker logs &lt;id/nombre&gt;</code> muestra los logs y el flag <code>-f</code> (follow) los mantiene en streaming en vivo."
+      },
+      {
+        id: 37,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Cuál es la diferencia clave entre <code>docker attach</code> y <code>docker exec</code>?",
+        opts: [
+          "<code>attach</code> conecta con el proceso principal del contenedor; <code>exec</code> ejecuta un comando/proceso nuevo dentro del contenedor en marcha.",
+          "<code>attach</code> funciona en contenedores detenidos y <code>exec</code> solo en imágenes.",
+          "<code>exec</code> detiene el contenedor al salir y <code>attach</code> nunca lo detiene.",
+          "<code>attach</code> solo funciona en Windows y <code>exec</code> solo en macOS."
+        ],
+        ans: 0,
+        exp: "<code>attach</code> acopla tu terminal al proceso principal (stdin/stdout/stderr); <code>exec</code> lanza un proceso independiente (ej. una shell)."
+      },
+      {
+        id: 38,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué significan los flags <code>-i</code> y <code>-t</code> en el comando <code>docker exec -it mi-cont bash</code>?",
+        opts: [
+          "<code>-i</code> de image y <code>-t</code> de tag.",
+          "<code>-i</code> de interactive (mantiene stdin abierto) y <code>-t</code> de terminal (asigna una pseudo-TTY).",
+          "<code>-i</code> de internal y <code>-t</code> de timeout.",
+          "<code>-i</code> de inspect y <code>-t</code> de trace."
+        ],
+        ans: 1,
+        exp: "<code>-i</code> (interactive) y <code>-t</code> (terminal) permiten interactuar con una sesión de shell como <code>bash</code> o <code>sh</code> dentro del contenedor."
+      },
+      {
+        id: 39,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Cuál es la política de reinicio por defecto de un contenedor si no se especifica <code>--restart</code>?",
+        opts: [
+          "<code>always</code>",
+          "<code>no</code> (no se reinicia automáticamente)",
+          "<code>on-failure</code>",
+          "<code>unless-stopped</code>"
+        ],
+        ans: 1,
+        exp: "Por defecto la política es <code>no</code>: si el contenedor termina o falla, Docker no lo vuelve a arrancar."
+      },
+      {
+        id: 40,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué diferencia existe entre las políticas <code>--restart always</code> y <code>--restart unless-stopped</code>?",
+        opts: [
+          "<code>always</code> solo reinicia si hay error y <code>unless-stopped</code> siempre.",
+          "Si detienes un contenedor manualmente y luego reinicias el servidor/daemon, <code>always</code> lo vuelve a arrancar mientras que <code>unless-stopped</code> lo mantiene detenido.",
+          "<code>unless-stopped</code> tiene un límite máximo de 3 reintentos.",
+          "No existe ninguna diferencia entre ambas."
+        ],
+        ans: 1,
+        exp: "Tras reiniciar el daemon/host, <code>always</code> arranca el contenedor aunque hubiera sido parado manualmente; <code>unless-stopped</code> respeta la parada manual."
+      },
+      {
+        id: 41,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué hace la política de reinicio <code>--restart on-failure:5</code>?",
+        opts: [
+          "Reinicia el contenedor cada 5 segundos independientemente de su estado.",
+          "Reinicia el contenedor solo si termina con código de salida distinto de 0, con un máximo de 5 reintentos.",
+          "Espera 5 minutos antes de apagar el contenedor.",
+          "Reinicia el contenedor exactamente 5 veces y luego lo elimina con rm."
+        ],
+        ans: 1,
+        exp: "<code>on-failure:&lt;n&gt;</code> reinicia el contenedor únicamente cuando falla (código exit distinto de 0) hasta un máximo de <code>n</code> intentos."
+      },
+      {
+        id: 42,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Con qué comando puedes cambiar la política de reinicio de un contenedor ya existente?",
+        opts: [
+          "<code>docker update --restart no &lt;contenedor&gt;</code>",
+          "<code>docker config --restart no &lt;contenedor&gt;</code>",
+          "<code>docker modify --restart no &lt;contenedor&gt;</code>",
+          "<code>docker tag --restart no &lt;contenedor&gt;</code>"
+        ],
+        ans: 0,
+        exp: "<code>docker update --restart &lt;politica&gt; &lt;contenedor&gt;</code> permite actualizar la política de reinicio sin recrear el contenedor."
+      },
+      {
+        id: 43,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué sintaxis mapea un rango de puertos del host (8080 al 8085) con un rango del contenedor (80 al 85)?",
+        opts: [
+          "<code>-p 8080..8085:80..85</code>",
+          "<code>-p 8080-8085:80-85</code>",
+          "<code>-p 80-85:8080-8085</code>",
+          "<code>--port-range 8080:80/5</code>"
+        ],
+        ans: 1,
+        exp: "La sintaxis correcta es <code>-p 8080-8085:80-85</code> (siempre puertos del host a la izquierda y del contenedor a la derecha)."
+      },
+      {
+        id: 44,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué ocurre si intentas crear un contenedor con <code>--name web1</code> cuando ya existe otro contenedor (activo o detenido) llamado <code>web1</code>?",
+        opts: [
+          "Docker renombra el antiguo a web1_old automáticamente.",
+          "Docker devuelve un error de conflicto indicando que el nombre ya está en uso y debes eliminarlo o renombrarlo.",
+          "Docker sobrescribe el contenedor anterior sin avisar.",
+          "Docker añade un número aleatorio al final: web1_2."
+        ],
+        ans: 1,
+        exp: "Los nombres de contenedores deben ser únicos; si ya existe (incluso detenido), da error de conflicto hasta que lo borres o uses <code>docker rename</code>."
+      },
+      {
+        id: 45,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Es posible modificar los puertos publicados (<code>-p</code>) de un contenedor que ya ha sido creado?",
+        opts: [
+          "Sí, mediante <code>docker update -p 9090:80 &lt;contenedor&gt;</code>.",
+          "No, Docker no permite editar los mapeos de puertos en caliente; se fijan en el <code>docker run</code>.",
+          "Sí, pausándolo primero con <code>docker pause</code>.",
+          "Sí, desde la pestaña Networks de Docker Desktop."
+        ],
+        ans: 1,
+        exp: "Los puertos publicados se fijan al crear el contenedor con <code>docker run</code> y no se pueden modificar posteriormente en caliente."
+      },
+      {
+        id: 46,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué diferencia hay entre <code>docker start &lt;cont&gt;</code> y <code>docker run &lt;img&gt;</code>?",
+        opts: [
+          "<code>docker start</code> arranca un contenedor existente que estaba detenido; <code>docker run</code> crea y arranca un contenedor nuevo desde una imagen.",
+          "<code>docker start</code> descarga la imagen de Internet y <code>docker run</code> solo usa locales.",
+          "<code>docker start</code> borra los volúmenes asociados.",
+          "No hay ninguna diferencia."
+        ],
+        ans: 0,
+        exp: "<code>docker run</code> instancia un contenedor nuevo; <code>docker start</code> vuelve a poner en marcha uno que ya existía y estaba parado."
+      },
+      {
+        id: 47,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿A qué equivale ejecutar <code>docker restart &lt;contenedor&gt;</code>?",
+        opts: [
+          "A eliminar el contenedor y volver a descargarlo de Docker Hub.",
+          "A ejecutar un <code>docker stop</code> seguido de un <code>docker start</code>.",
+          "A pausar y despausar los procesos con <code>pause/unpause</code>.",
+          "A reconstruir su Dockerfile."
+        ],
+        ans: 1,
+        exp: "<code>docker restart</code> detiene el contenedor en marcha y lo vuelve a iniciar (equivalente a <code>stop</code> + <code>start</code>)."
+      },
+      {
+        id: 48,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué ocurre si ejecutas <code>docker rm mi-contenedor</code> sobre un contenedor que está actualmente en ejecución?",
+        opts: [
+          "Se detiene y se elimina limpiamente.",
+          "Docker devuelve un error impidiendo borrarlo, a menos que lo detengas antes o uses el flag <code>-f</code>.",
+          "Se pausa el contenedor indefinidamente.",
+          "Se borra únicamente su imagen."
+        ],
+        ans: 1,
+        exp: "<code>docker rm</code> solo borra contenedores detenidos; para eliminar uno activo debes pararlo primero o forzarlo con <code>docker rm -f</code>."
+      },
+      {
+        id: 49,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué comando limpia de una sola vez todos los contenedores que están detenidos en el sistema?",
+        opts: [
+          "<code>docker container prune</code>",
+          "<code>docker rm --running</code>",
+          "<code>docker image prune</code>",
+          "<code>docker clean --all</code>"
+        ],
+        ans: 0,
+        exp: "<code>docker container prune</code> elimina todos los contenedores detenidos (pedirá confirmación salvo que añadas <code>-f</code>)."
+      },
+      {
+        id: 50,
+        cat: "3. Ejecución y Gestión de Contenedores",
+        q: "¿Qué comando permite ver en tiempo real el consumo de CPU, memoria y red de los contenedores activos?",
+        opts: [
+          "<code>docker top</code>",
+          "<code>docker stats</code>",
+          "<code>docker diff</code>",
+          "<code>docker events</code>"
+        ],
+        ans: 1,
+        exp: "Según la tabla de comandos del tema, <code>docker stats</code> muestra en vivo las estadísticas de uso de recursos de los contenedores."
+      },
+
+      // --- BLOQUE 4: IMÁGENES, CAPAS Y REGISTRIES (20 preguntas) ---
+      {
+        id: 51,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Qué significa que las imágenes de Docker sean 'inmutables'?",
+        opts: [
+          "Que no se pueden descargar más de una vez.",
+          "Que una vez construida una imagen no se modifica; si necesitas cambios, creas una nueva imagen (derivada o desde cero).",
+          "Que ocupan siempre 0 bytes en disco.",
+          "Que solo el usuario root de Docker Hub puede ejecutarlas."
+        ],
+        ans: 1,
+        exp: "La inmutabilidad garantiza que una imagen nunca cambia tras construirse, asegurando versionado preciso y comportamiento idéntico."
+      },
+      {
+        id: 52,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Cómo está estructurada internamente una imagen de Docker?",
+        opts: [
+          "Como un único archivo ejecutable monolítico .exe.",
+          "Por capas (layers) apiladas, donde cada capa representa una modificación en el sistema de archivos y puede reutilizarse.",
+          "Como una base de datos relacional SQLite.",
+          "Como una partición NTFS encriptada."
+        ],
+        ans: 1,
+        exp: "Las imágenes están formadas por <code>capas (layers)</code> apiladas que Docker reutiliza entre distintas imágenes para ahorrar espacio y tiempo."
+      },
+      {
+        id: 53,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "Si descargas <code>alpine:3.19</code> y después haces <code>docker pull nginx:stable-alpine3.19</code>, ¿qué ocurre con las capas comunes?",
+        opts: [
+          "Docker las vuelve a descargar duplicadas.",
+          "Docker detecta que ya existen localmente ('Already exists') y solo descarga las capas nuevas específicas de Nginx.",
+          "Docker borra alpine:3.19 para dejar espacio a Nginx.",
+          "Se produce un error de colisión de hashes SHA256."
+        ],
+        ans: 1,
+        exp: "Gracias a la reutilización de capas, Docker muestra <code>Already exists</code> en las capas compartidas de Alpine y descarga solo las diferencias."
+      },
+      {
+        id: 54,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Qué comando permite inspeccionar el historial de construcción, las capas y el tamaño de cada capa de una imagen local?",
+        opts: [
+          "<code>docker history &lt;imagen&gt;</code>",
+          "<code>docker layers &lt;imagen&gt;</code>",
+          "<code>docker log-image &lt;imagen&gt;</code>",
+          "<code>docker tree &lt;imagen&gt;</code>"
+        ],
+        ans: 0,
+        exp: "<code>docker history &lt;imagen&gt;</code> muestra cada capa, qué instrucción la creó y su tamaño."
+      },
+      {
+        id: 55,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Qué comando lista las imágenes almacenadas localmente en tu equipo?",
+        opts: [
+          "<code>docker images</code> (o <code>docker image ls</code>)",
+          "<code>docker ps -i</code>",
+          "<code>docker list-images</code>",
+          "<code>docker search --local</code>"
+        ],
+        ans: 0,
+        exp: "<code>docker images</code> muestra repositorio, tag, Image ID, fecha de creación y tamaño de las imágenes locales."
+      },
+      {
+        id: 56,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Qué devuelve exactamente el flag <code>-q</code> en <code>docker images -q</code>?",
+        opts: [
+          "Solo el tamaño total ocupado por todas las imágenes.",
+          "Únicamente los identificadores (Image IDs) de las imágenes locales.",
+          "Solo las imágenes oficiales verificadas.",
+          "Una lista ordenada alfabéticamente por etiqueta."
+        ],
+        ans: 1,
+        exp: "<code>docker images -q</code> (quiet) imprime solo los IDs, muy útil para combinarlo con <code>docker rmi $(docker images -q)</code>."
+      },
+      {
+        id: 57,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Qué comando elimina una imagen local llamada <code>nginx:stable-alpine3.19</code>?",
+        opts: [
+          "<code>docker rm nginx:stable-alpine3.19</code>",
+          "<code>docker rmi nginx:stable-alpine3.19</code>",
+          "<code>docker delete nginx:stable-alpine3.19</code>",
+          "<code>docker prune nginx:stable-alpine3.19</code>"
+        ],
+        ans: 1,
+        exp: "Para borrar imágenes se usa <code>docker rmi</code> (remove image), mientras que <code>docker rm</code> es para contenedores."
+      },
+      {
+        id: 58,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Qué sucede si intentas borrar con <code>docker rmi</code> una imagen que está siendo utilizada por algún contenedor?",
+        opts: [
+          "Se borra la imagen y el contenedor sigue funcionando sin imagen.",
+          "Docker impide borrarla hasta que detengas/elimines el contenedor (o uses <code>docker rmi -f</code>).",
+          "Se detiene automáticamente el ordenador anfitrión.",
+          "Se sube una copia de seguridad a Docker Hub antes de borrarla."
+        ],
+        ans: 1,
+        exp: "Si hay un contenedor asociado (incluso detenido), debes eliminar primero el contenedor o forzar el borrado con <code>-f</code>."
+      },
+      {
+        id: 59,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Qué son las imágenes 'dangling' (colgantes) que borra por defecto <code>docker image prune</code>?",
+        opts: [
+          "Imágenes que llevan más de 1 año sin usarse.",
+          "Capas o imágenes huérfanas sin etiqueta ni repositorio (aparecen como <code>&lt;none&gt;:&lt;none&gt;</code>).",
+          "Imágenes que contienen vulnerabilidades críticas.",
+          "Imágenes descargadas desde registros privados."
+        ],
+        ans: 1,
+        exp: "<code>docker image prune</code> sin flags elimina las imágenes <em>dangling</em> (<code>&lt;none&gt;</code>); con <code>-a</code> elimina todas las no usadas por ningún contenedor."
+      },
+      {
+        id: 60,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Qué diferencia hay entre <code>docker image prune</code> y <code>docker image prune -a</code>?",
+        opts: [
+          "<code>-a</code> borra también las imágenes que están en uso por contenedores activos.",
+          "<code>-a</code> borra todas las imágenes que no tengan al menos un contenedor asociado (no solo las <code>&lt;none&gt;</code>).",
+          "<code>-a</code> pide confirmación dos veces.",
+          "<code>-a</code> solo borra imágenes de arquitectura ARM64."
+        ],
+        ans: 1,
+        exp: "<code>docker image prune -a</code> elimina cualquier imagen sin contenedores asociados, liberando mucho más espacio."
+      },
+      {
+        id: 61,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Cómo indica el comando <code>docker search nginx</code> si una imagen es oficial de Docker Hub?",
+        opts: [
+          "Con un asterisco rojo al principio del nombre.",
+          "Con <code>[OK]</code> en la columna <code>OFFICIAL</code>.",
+          "Con el prefijo <code>official/</code> en el repositorio.",
+          "Con más de 10.000 estrellas obligatoriamente."
+        ],
+        ans: 1,
+        exp: "La salida de <code>docker search</code> muestra las columnas NAME, DESCRIPTION, STARS y <code>OFFICIAL</code> (marcada con <code>[OK]</code>)."
+      },
+      {
+        id: 62,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Qué captura exactamente el comando <code>docker commit &lt;container_id&gt; &lt;nombre_imagen&gt;</code>?",
+        opts: [
+          "El estado completo de la memoria RAM, los procesos en curso y los volúmenes externos.",
+          "Únicamente los cambios persistidos en el sistema de archivos (disco) del contenedor respecto a su imagen original.",
+          "Un vídeo de la sesión de terminal del contenedor.",
+          "Los logs de red de los últimos 5 minutos."
+        ],
+        ans: 1,
+        exp: "El tema recalca que <code>docker commit</code> es como una snapshot del disco: <strong>no captura</strong> memoria RAM ni procesos en ejecución."
+      },
+      {
+        id: 63,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Qué comando permite exportar una imagen Docker local a un archivo comprimido <code>.tar</code> para llevarla a otro equipo?",
+        opts: [
+          "<code>docker save -o mi-imagen.tar mi-imagen</code>",
+          "<code>docker export -o mi-imagen.tar mi-imagen</code>",
+          "<code>docker backup mi-imagen &gt; mi-imagen.tar</code>",
+          "<code>docker pack mi-imagen.tar mi-imagen</code>"
+        ],
+        ans: 0,
+        exp: "<code>docker save -o &lt;fichero&gt;.tar &lt;imagen&gt;</code> exporta una imagen completa (con sus capas) a un archivo tar."
+      },
+      {
+        id: 64,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Qué comando se utiliza para cargar en Docker una imagen previamente exportada en un fichero <code>mi-imagen.tar</code>?",
+        opts: [
+          "<code>docker import -i mi-imagen.tar</code>",
+          "<code>docker load -i mi-imagen.tar</code>",
+          "<code>docker restore mi-imagen.tar</code>",
+          "<code>docker pull file://mi-imagen.tar</code>"
+        ],
+        ans: 1,
+        exp: "La pareja de <code>docker save</code> para imágenes es <code>docker load -i &lt;fichero&gt;.tar</code>."
+      },
+      {
+        id: 65,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Duplica el espacio ocupado en disco el comando <code>docker tag mi-imagen:latest mi-imagen:v1</code>?",
+        opts: [
+          "Sí, crea una copia completa de todas las capas.",
+          "No, simplemente añade una nueva etiqueta/alias que apunta al mismo ID/digest de imagen.",
+          "Sí, pero la comprime a la mitad de tamaño.",
+          "No, porque borra la etiqueta original <code>latest</code>."
+        ],
+        ans: 1,
+        exp: "<code>docker tag</code> no duplica la imagen ni ocupa más espacio: crea otra etiqueta apuntando al mismo Image ID."
+      },
+      {
+        id: 66,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "Si tienes una imagen local llamada <code>mi-imagen:latest</code> y quieres subirla a tu cuenta <code>jaml</code> en Docker Hub, ¿qué debes hacer antes de <code>docker push</code>?",
+        opts: [
+          "Convertirla a .tar con docker save.",
+          "Etiquetarla incluyendo tu usuario de Docker Hub: <code>docker tag mi-imagen:latest jaml/mi-imagen:latest</code>.",
+          "Cambiarle el nombre al archivo Dockerfile.",
+          "Detener todos los contenedores del equipo."
+        ],
+        ans: 1,
+        exp: "Para subir a Docker Hub debes etiquetar la imagen con el formato <code>usuario/repositorio:tag</code> y luego hacer <code>docker push usuario/repositorio:tag</code>."
+      },
+      {
+        id: 67,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Cómo debes etiquetar una imagen si deseas subirla a un registro distinto de Docker Hub, como GitHub Container Registry?",
+        opts: [
+          "No es posible subir imágenes a registros externos desde la CLI de Docker.",
+          "Incluyendo la dirección del registro en el tag: <code>docker tag mi-imagen:latest github.com/jaml/mi-imagen:latest</code>.",
+          "Añadiendo el flag <code>--github</code> al comando <code>docker push</code>.",
+          "Guardándola en una carpeta llamada <code>.github</code>."
+        ],
+        ans: 1,
+        exp: "Especificando el dominio del registro en el nombre de la etiqueta (<code>registro/usuario/imagen:tag</code>), <code>docker push</code> la envía a ese registro."
+      },
+      {
+        id: 68,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Qué comando se usa para autenticarte desde la terminal contra un registro de imágenes como Docker Hub?",
+        opts: [
+          "<code>docker auth</code>",
+          "<code>docker login</code>",
+          "<code>docker connect</code>",
+          "<code>docker register</code>"
+        ],
+        ans: 1,
+        exp: "<code>docker login</code> permite autenticarte en un registro para poder subir imágenes (<code>push</code>) o descargar repositorios privados."
+      },
+      {
+        id: 69,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "Si ejecutas <code>docker pull nginx</code> sin indicar ninguna etiqueta (tag), ¿qué etiqueta descarga Docker por defecto?",
+        opts: [
+          "<code>stable</code>",
+          "<code>latest</code>",
+          "<code>alpine</code>",
+          "<code>v1</code>"
+        ],
+        ans: 1,
+        exp: "Cuando se omite la etiqueta, Docker asume automáticamente <code>:latest</code>."
+      },
+      {
+        id: 70,
+        cat: "4. Imágenes, Capas y Registries",
+        q: "¿Por qué las imágenes basadas en <code>alpine</code> (como <code>alpine:3.19</code>) son tan populares como imagen base?",
+        opts: [
+          "Porque incluyen entorno gráfico GNOME preinstalado.",
+          "Porque son imágenes mínimas y extremadamente ligeras (alrededor de 9-13 MB), reduciendo superficie de ataque y tiempo de descarga.",
+          "Porque son las únicas compatibles con Windows Server.",
+          "Porque ejecutan aplicaciones Java sin necesidad de JDK ni JRE."
+        ],
+        ans: 1,
+        exp: "El tema destaca el uso de imágenes base oficiales y mínimas como <code>alpine</code> por su reducido tamaño y rapidez."
+      },
+
+      // --- BLOQUE 5: DOCKERFILE, ENTRYPOINT, CMD, ARG/ENV (15 preguntas) ---
+      {
+        id: 71,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "¿Con qué instrucción suele comenzar todo archivo <code>Dockerfile</code>?",
+        opts: [
+          "<code>START</code>",
+          "<code>FROM</code>",
+          "<code>BASE</code>",
+          "<code>INIT</code>"
+        ],
+        ans: 1,
+        exp: "<code>FROM</code> es la instrucción inicial que fija la imagen base sobre la que se construirá la nueva imagen."
+      },
+      {
+        id: 72,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "¿En qué momento se ejecutan los comandos definidos con la instrucción <code>RUN</code> en un Dockerfile?",
+        opts: [
+          "Cada vez que se arranca un contenedor con <code>docker run</code>.",
+          "Durante la construcción de la imagen (<code>docker build</code>), creando una nueva capa con los cambios.",
+          "Únicamente cuando el contenedor se detiene.",
+          "Solo si se pasa el flag <code>--run</code> en <code>docker compose</code>."
+        ],
+        ans: 1,
+        exp: "<code>RUN</code> ejecuta comandos en tiempo de construcción (build) para instalar paquetes, compilar código, etc., generando una capa."
+      },
+      {
+        id: 73,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "¿Qué instrucción de Dockerfile fija el directorio de trabajo por defecto para las siguientes instrucciones (<code>RUN</code>, <code>COPY</code>, <code>CMD</code>...)?",
+        opts: [
+          "<code>CD</code>",
+          "<code>WORKDIR</code>",
+          "<code>PATH</code>",
+          "<code>DIR</code>"
+        ],
+        ans: 1,
+        exp: "<code>WORKDIR /app</code> establece el directorio activo dentro de la imagen para las instrucciones posteriores."
+      },
+      {
+        id: 74,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "¿Qué hace exactamente la instrucción <code>COPY index.html /usr/share/nginx/html/index.html</code>?",
+        opts: [
+          "Descarga index.html desde Internet durante el arranque del contenedor.",
+          "Copia el fichero index.html desde el contexto de construcción del host al sistema de archivos de la imagen.",
+          "Mueve el fichero del contenedor al escritorio del usuario.",
+          "Crea un enlace simbólico en tiempo real con el host."
+        ],
+        ans: 1,
+        exp: "<code>COPY</code> copia archivos o directorios desde el contexto del host hacia la ruta indicada dentro de la imagen."
+      },
+      {
+        id: 75,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "En un proyecto Python, ¿cuál es el orden óptimo de instrucciones en el Dockerfile para aprovechar la caché de capas?",
+        opts: [
+          "Copiar todo el código fuente primero y al final copiar requirements.txt e instalar dependencias.",
+          "Copiar <code>requirements.txt</code> y ejecutar <code>RUN pip install -r requirements.txt</code> ANTES de hacer <code>COPY script.py .</code>.",
+          "Poner <code>CMD</code> en la primera línea antes de <code>FROM</code>.",
+          "El orden de las líneas en un Dockerfile no afecta nunca a la caché."
+        ],
+        ans: 1,
+        exp: "Al instalar dependencias antes de copiar el código que cambia frecuentemente, Docker reutiliza la capa de <code>pip install</code> sin reinstalar paquetes en cada cambio."
+      },
+      {
+        id: 76,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "¿Qué ocurre en la caché de construcción si modificas la línea 3 de un Dockerfile de 6 líneas y lanzas <code>docker build</code>?",
+        opts: [
+          "Se reutilizan las capas 1 y 2 de la caché, y se reconstruyen desde la línea 3 hasta la 6.",
+          "Se reconstruye solo la línea 3 y se reutilizan las líneas 4, 5 y 6.",
+          "Se invalida también la caché de las líneas 1 y 2.",
+          "Docker ignora el cambio en la línea 3."
+        ],
+        ans: 0,
+        exp: "Las instrucciones son secuenciales: un cambio en una instrucción invalida su caché y la de todas las instrucciones posteriores."
+      },
+      {
+        id: 77,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "¿Cuál es la diferencia fundamental entre <code>ENTRYPOINT</code> y <code>CMD</code> en un Dockerfile?",
+        opts: [
+          "<code>ENTRYPOINT</code> fija el proceso/ejecutable principal; lo que pases en <code>docker run</code> se le añade como parámetros. <code>CMD</code> define valores por defecto que se sobrescriben si pasas un comando en <code>docker run</code>.",
+          "<code>CMD</code> es para Linux y <code>ENTRYPOINT</code> es solo para Windows.",
+          "<code>ENTRYPOINT</code> solo puede usarse si no hay <code>FROM</code>.",
+          "<code>CMD</code> se ejecuta durante el build y <code>ENTRYPOINT</code> nunca se ejecuta."
+        ],
+        ans: 0,
+        exp: "<code>ENTRYPOINT</code> define el ejecutable fijo; <code>CMD</code> aporta los argumentos o comando por defecto sobrescribibles desde <code>docker run</code>."
+      },
+      {
+        id: 78,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "Un Dockerfile contiene <code>ENTRYPOINT [\"echo\", \"Hola\"]</code> y <code>CMD [\"Mundo\"]</code>. ¿Qué salida produce ejecutar <code>docker run saludador</code> sin argumentos extra?",
+        opts: [
+          "<code>Mundo</code>",
+          "<code>Hola Mundo</code>",
+          "<code>Hola</code>",
+          "Error: conflicto entre ENTRYPOINT y CMD."
+        ],
+        ans: 1,
+        exp: "Al no pasar argumentos en <code>docker run</code>, se usa el <code>CMD</code> por defecto como parámetro del <code>ENTRYPOINT</code>: <code>echo Hola Mundo</code>."
+      },
+      {
+        id: 79,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "Con ese mismo Dockerfile (<code>ENTRYPOINT [\"echo\", \"Hola\"]</code> y <code>CMD [\"Mundo\"]</code>), ¿qué salida produce <code>docker run saludador dockermaniatico</code>?",
+        opts: [
+          "<code>Hola Mundo dockermaniatico</code>",
+          "<code>dockermaniatico</code>",
+          "<code>Hola dockermaniatico</code>",
+          "<code>Mundo dockermaniatico</code>"
+        ],
+        ans: 2,
+        exp: "El argumento <code>dockermaniatico</code> sobrescribe al <code>CMD</code> (<code>\"Mundo\"</code>) y se pasa como parámetro a <code>ENTRYPOINT</code>: <code>echo Hola dockermaniatico</code>."
+      },
+      {
+        id: 80,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "¿Qué instrucción permite definir variables parametrizables que existen ÚNICAMENTE durante el proceso de construcción (<code>docker build</code>)?",
+        opts: [
+          "<code>ENV</code>",
+          "<code>ARG</code>",
+          "<code>VAR</code>",
+          "<code>PARAM</code>"
+        ],
+        ans: 1,
+        exp: "<code>ARG</code> define argumentos disponibles solo durante el build (se pasan con <code>--build-arg</code>) y no persisten en el contenedor en ejecución."
+      },
+      {
+        id: 81,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "¿Cómo sobrescribes el valor de un <code>ARG NOMBRE=\"Mundo\"</code> al construir una imagen con <code>docker build</code>?",
+        opts: [
+          "<code>docker build -e NOMBRE=Ana -t saludador .</code>",
+          "<code>docker build --build-arg NOMBRE=Ana -t saludador .</code>",
+          "<code>docker build --arg NOMBRE=Ana -t saludador .</code>",
+          "<code>docker build --env NOMBRE=Ana -t saludador .</code>"
+        ],
+        ans: 1,
+        exp: "Para inyectar valores a instrucciones <code>ARG</code> en tiempo de construcción se usa <code>--build-arg CLAVE=VALOR</code>."
+      },
+      {
+        id: 82,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "Si quieres que el valor de un <code>ARG</code> definido en el build quede persistido también como variable de entorno dentro del contenedor al ejecutarse, ¿qué debes añadir en el Dockerfile?",
+        opts: [
+          "<code>PERSIST NOMBRE</code>",
+          "<code>ENV NOMBRE=$NOMBRE</code>",
+          "<code>EXPORT NOMBRE</code>",
+          "<code>SAVE ARG NOMBRE</code>"
+        ],
+        ans: 1,
+        exp: "Como <code>ARG</code> desaparece tras el build, debes asignarlo a una variable de entorno mediante <code>ENV NOMBRE=$NOMBRE</code>."
+      },
+      {
+        id: 83,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "¿Qué significa la opción <code>-t mi-nginx:v1</code> en el comando <code>docker build -t mi-nginx:v1 .</code>?",
+        opts: [
+          "Establece un tiempo límite (timeout) de 1 segundo.",
+          "Asigna el nombre (repositorio) <code>mi-nginx</code> y la etiqueta (tag) <code>v1</code> a la imagen resultante.",
+          "Ejecuta el contenedor en modo terminal interactivo.",
+          "Indica que el Dockerfile está en formato texto plano."
+        ],
+        ans: 1,
+        exp: "<code>-t</code> (tag) nombra y etiqueta la imagen generada; si se omite, Docker asigna un ID aleatorio sin nombre."
+      },
+      {
+        id: 84,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "¿Qué es el 'contexto' en el comando <code>docker build -t mi-app .</code>?",
+        opts: [
+          "La carpeta desde la que se lanza el build (indicada por <code>.</code>) y que sirve de referencia para copiar archivos a la imagen.",
+          "La memoria RAM máxima asignada al contenedor.",
+          "La red bridge por defecto de Docker.",
+          "La cuenta de usuario en Docker Hub."
+        ],
+        ans: 0,
+        exp: "El directorio final (<code>.</code>) define el contexto de construcción que Docker envía al daemon para resolver las instrucciones <code>COPY</code>."
+      },
+      {
+        id: 85,
+        cat: "5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV",
+        q: "¿Cuál es la razón principal para usar variables de entorno (<code>-e</code> / <code>ENV</code>) al diseñar imágenes de bases de datos o aplicaciones?",
+        opts: [
+          "Aumentar el tamaño de la imagen para que sea más rápida.",
+          "Evitar valores fijos (hardcoded) y lograr imágenes independientes del entorno, configurables dinámicamente en cada despliegue.",
+          "Ocultar el código fuente de Python para que nadie pueda leerlo.",
+          "Evitar tener que usar el comando docker run."
+        ],
+        ans: 1,
+        exp: "Parametrizar mediante variables de entorno permite que una misma imagen funcione en desarrollo, pruebas o producción sin reconstruirla."
+      },
+
+      // --- BLOQUE 6: VOLÚMENES Y REDES (12 preguntas) ---
+      {
+        id: 86,
+        cat: "6. Volúmenes y Redes",
+        q: "¿Por qué son necesarios los volúmenes en Docker si los contenedores ya tienen su propio sistema de archivos?",
+        opts: [
+          "Porque el sistema de archivos interno de un contenedor es efímero y se pierde al eliminar el contenedor.",
+          "Porque los contenedores no permiten escribir ningún archivo sin un volumen.",
+          "Porque los volúmenes aumentan la velocidad de la CPU.",
+          "Porque Docker Hub exige al menos un volumen por imagen."
+        ],
+        ans: 0,
+        exp: "Los datos escritos dentro del contenedor son efímeros; los volúmenes permiten persistir datos fuera del ciclo de vida del contenedor."
+      },
+      {
+        id: 87,
+        cat: "6. Volúmenes y Redes",
+        q: "¿Qué secuencia de comandos permite crear, listar e inspeccionar volúmenes en Docker?",
+        opts: [
+          "<code>docker volume create</code>, <code>docker volume ls</code>, <code>docker volume inspect</code>",
+          "<code>docker vol add</code>, <code>docker vol list</code>, <code>docker vol info</code>",
+          "<code>docker disk create</code>, <code>docker disk ps</code>, <code>docker disk show</code>",
+          "<code>docker storage new</code>, <code>docker storage ls</code>, <code>docker storage cat</code>"
+        ],
+        ans: 0,
+        exp: "La gestión de volúmenes usa el subcomando <code>docker volume</code> seguido de <code>create</code>, <code>ls</code>, <code>inspect</code> o <code>rm</code>."
+      },
+      {
+        id: 88,
+        cat: "6. Volúmenes y Redes",
+        q: "¿Cómo se monta un volumen nombrado llamado <code>mi-volumen</code> en la ruta <code>/datos</code> de un contenedor?",
+        opts: [
+          "<code>docker run -d -v mi-volumen:/datos nginx</code>",
+          "<code>docker run -d -p mi-volumen:/datos nginx</code>",
+          "<code>docker run -d -e mi-volumen=/datos nginx</code>",
+          "<code>docker run -d --link mi-volumen:/datos nginx</code>"
+        ],
+        ans: 0,
+        exp: "Se utiliza el flag <code>-v nombre_volumen:/ruta/contenedor</code> (o la sintaxis <code>--mount</code>)."
+      },
+      {
+        id: 89,
+        cat: "6. Volúmenes y Redes",
+        q: "¿Qué ocurre al montar una carpeta local del host (bind mount, ej. <code>-v $(pwd)/data:/data</code>) en Windows o macOS frente a usar un volumen de Docker?",
+        opts: [
+          "No funciona en absoluto en Windows ni en macOS.",
+          "El rendimiento puede ser inferior al de un volumen gestionado por Docker debido a la capa de virtualización y diferencias de filesystem.",
+          "Borra automáticamente todos los archivos de la carpeta del host al arrancar.",
+          "Convierte la carpeta del host en solo lectura."
+        ],
+        ans: 1,
+        exp: "El tema advierte que montar rutas del host en Windows y macOS tiene menor rendimiento que los volúmenes nativos de Docker por la virtualización."
+      },
+      {
+        id: 90,
+        cat: "6. Volúmenes y Redes",
+        q: "¿Qué comando permite copiar un fichero desde el interior de un contenedor hacia tu máquina anfitriona?",
+        opts: [
+          "<code>docker cp mi-contenedor:/datos/archivo.txt /ruta/local/archivo.txt</code>",
+          "<code>docker pull mi-contenedor:/datos/archivo.txt /ruta/local/</code>",
+          "<code>docker scp mi-contenedor:/datos/archivo.txt .</code>",
+          "<code>docker export mi-contenedor:/datos/archivo.txt .</code>"
+        ],
+        ans: 0,
+        exp: "<code>docker cp</code> funciona en ambos sentidos: <code>host -> contenedor</code> y <code>contenedor -> host</code>."
+      },
+      {
+        id: 91,
+        cat: "6. Volúmenes y Redes",
+        q: "¿Cuál es el driver de red por defecto cuando creas una red con <code>docker network create mi-red</code>?",
+        opts: [
+          "<code>host</code>",
+          "<code>bridge</code>",
+          "<code>overlay</code>",
+          "<code>none</code>"
+        ],
+        ans: 1,
+        exp: "El driver por defecto es <code>bridge</code>, que permite comunicar contenedores dentro del mismo host."
+      },
+      {
+        id: 92,
+        cat: "6. Volúmenes y Redes",
+        q: "¿Qué riesgo de seguridad implica utilizar el driver de red <code>host</code> en un contenedor?",
+        opts: [
+          "El contenedor queda completamente desconectado de cualquier red.",
+          "El contenedor comparte directamente la interfaz de red del host anfitrión, pudiendo ver y acceder a su red.",
+          "Expone todas las contraseñas en Docker Hub.",
+          "Desactiva el firewall del router de la empresa."
+        ],
+        ans: 1,
+        exp: "Con el driver <code>host</code> no hay aislamiento de red entre el contenedor y la máquina anfitriona."
+      },
+      {
+        id: 93,
+        cat: "6. Volúmenes y Redes",
+        q: "¿Qué driver de red de Docker está diseñado para comunicar contenedores que se ejecutan en DIFERENTES hosts físicos (cargas distribuidas)?",
+        opts: [
+          "<code>bridge</code>",
+          "<code>overlay</code>",
+          "<code>none</code>",
+          "<code>local</code>"
+        ],
+        ans: 1,
+        exp: "El driver <code>overlay</code> crea una red distribuida que permite comunicar contenedores situados en distintos hosts."
+      },
+      {
+        id: 94,
+        cat: "6. Volúmenes y Redes",
+        q: "¿Qué driver de red asigna una dirección MAC propia a un contenedor para que se comporte como un dispositivo físico más en la red?",
+        opts: [
+          "<code>macvlan</code>",
+          "<code>bridge</code>",
+          "<code>host</code>",
+          "<code>overlay</code>"
+        ],
+        ans: 0,
+        exp: "<code>macvlan</code> asigna una dirección MAC al contenedor para integrarlo directamente como un dispositivo físico en la red."
+      },
+      {
+        id: 95,
+        cat: "6. Volúmenes y Redes",
+        q: "¿Qué driver de red deja a un contenedor totalmente aislado sin ningún acceso a la red?",
+        opts: [
+          "<code>null</code>",
+          "<code>none</code>",
+          "<code>isolated</code>",
+          "<code>offline</code>"
+        ],
+        ans: 1,
+        exp: "El driver <code>none</code> desactiva la red del contenedor dejando únicamente la interfaz loopback."
+      },
+      {
+        id: 96,
+        cat: "6. Volúmenes y Redes",
+        q: "¿Qué comando conecta en caliente un contenedor existente (<code>mi-contenedor</code>) a una red existente (<code>mi-red</code>)?",
+        opts: [
+          "<code>docker network connect mi-red mi-contenedor</code>",
+          "<code>docker network add mi-contenedor mi-red</code>",
+          "<code>docker link mi-red mi-contenedor</code>",
+          "<code>docker attach --network mi-red mi-contenedor</code>"
+        ],
+        ans: 0,
+        exp: "<code>docker network connect &lt;red&gt; &lt;contenedor&gt;</code> conecta un contenedor ya existente a una red; <code>disconnect</code> lo desconecta."
+      },
+      {
+        id: 97,
+        cat: "6. Volúmenes y Redes",
+        q: "¿Qué comando elimina una red de Docker llamada <code>mi-red</code>?",
+        opts: [
+          "<code>docker network rm mi-red</code>",
+          "<code>docker network delete mi-red</code>",
+          "<code>docker rmi --network mi-red</code>",
+          "<code>docker net destroy mi-red</code>"
+        ],
+        ans: 0,
+        exp: "Se elimina con <code>docker network rm &lt;nombre_red&gt;</code>."
+      },
+
+      // --- BLOQUE 7: DOCKER COMPOSE Y VS CODE (8 preguntas) ---
+      {
+        id: 98,
+        cat: "7. Docker Compose y VS Code",
+        q: "¿Cuál es la finalidad principal de Docker Compose?",
+        opts: [
+          "Compilar código C++ dentro de máquinas virtuales VMware.",
+          "Definir y ejecutar aplicaciones formadas por múltiples contenedores (servicios, redes y volúmenes) mediante un archivo YAML.",
+          "Sustituir al kernel de Linux en sistemas Windows.",
+          "Escanear vulnerabilidades en Docker Hub."
+        ],
+        ans: 1,
+        exp: "Docker Compose orquesta aplicaciones multi-contenedor declaradas en un único archivo YAML."
+      },
+      {
+        id: 99,
+        cat: "7. Docker Compose y VS Code",
+        q: "¿Cómo se llama el fichero por defecto que busca <code>docker compose</code> en el directorio actual?",
+        opts: [
+          "<code>docker.json</code>",
+          "<code>compose.yaml</code>",
+          "<code>services.yml</code>",
+          "<code>Dockerfile.compose</code>"
+        ],
+        ans: 1,
+        exp: "Según el temario, <code>docker compose</code> busca por defecto el archivo llamado <code>compose.yaml</code>."
+      },
+      {
+        id: 100,
+        cat: "7. Docker Compose y VS Code",
+        q: "¿Qué flag debes usar si tu fichero de Compose tiene un nombre personalizado como <code>stack-prod.yaml</code>?",
+        opts: [
+          "<code>docker compose -f stack-prod.yaml up</code>",
+          "<code>docker compose -c stack-prod.yaml up</code>",
+          "<code>docker compose -t stack-prod.yaml up</code>",
+          "<code>docker compose --import stack-prod.yaml up</code>"
+        ],
+        ans: 0,
+        exp: "El flag <code>-f /ruta/al/fichero.yaml</code> permite indicar un archivo YAML distinto al predeterminado."
+      },
+      {
+        id: 101,
+        cat: "7. Docker Compose y VS Code",
+        q: "En un fichero <code>compose.yaml</code>, si en lugar de <code>image:</code> pones <code>build: .</code> dentro de un servicio, ¿qué hace <code>docker compose up</code>?",
+        opts: [
+          "Da un error de sintaxis porque build no existe en Compose.",
+          "Construye la imagen a partir del Dockerfile ubicado en el directorio actual y luego arranca el servicio.",
+          "Descarga todos los Dockerfiles públicos de GitHub.",
+          "Solo valida el archivo YAML sin arrancar nada."
+        ],
+        ans: 1,
+        exp: "La clave <code>build: .</code> indica a Compose que debe construir la imagen usando el Dockerfile de esa ruta antes de levantar el contenedor."
+      },
+      {
+        id: 102,
+        cat: "7. Docker Compose y VS Code",
+        q: "¿Qué diferencia existe entre <code>docker compose down</code> y <code>docker compose down -v</code>?",
+        opts: [
+          "<code>down</code> detiene y elimina contenedores y redes pero conserva los volúmenes por seguridad; <code>down -v</code> elimina también los volúmenes.",
+          "<code>down</code> solo pausa los contenedores y <code>down -v</code> los detiene.",
+          "<code>down -v</code> muestra la versión de Docker Compose instalada.",
+          "No hay diferencia; ambos borran todos los datos de los volúmenes."
+        ],
+        ans: 0,
+        exp: "Por seguridad, <code>docker compose down</code> mantiene los volúmenes intactos; añadir <code>-v</code> borra también los volúmenes declarados."
+      },
+      {
+        id: 103,
+        cat: "7. Docker Compose y VS Code",
+        q: "¿Cómo ejecutas el comando <code>ls</code> dentro de un servicio llamado <code>web</code> definido en tu archivo Compose?",
+        opts: [
+          "<code>docker compose exec web ls</code>",
+          "<code>docker compose run --inside web ls</code>",
+          "<code>docker compose attach web ls</code>",
+          "<code>docker compose ssh web ls</code>"
+        ],
+        ans: 0,
+        exp: "<code>docker compose exec &lt;servicio&gt; &lt;comando&gt;</code> ejecuta un comando dentro del contenedor de ese servicio."
+      },
+      {
+        id: 104,
+        cat: "7. Docker Compose y VS Code",
+        q: "Respecto a la sección <code>secrets:</code> en un fichero Compose, ¿qué aclaración importante hace el temario?",
+        opts: [
+          "Que encripta automáticamente todo el disco duro del host.",
+          "Que los secretos de Compose solo funcionan en Docker Swarm.",
+          "Que solo funcionan con imágenes basadas en Ubuntu.",
+          "Que son obligatorios para poder usar volúmenes."
+        ],
+        ans: 1,
+        exp: "El tema señala explícitamente el disclaimer: <em>'Estos secretos solo funcionan en Docker Swarm'</em>."
+      },
+      {
+        id: 105,
+        cat: "7. Docker Compose y VS Code",
+        q: "¿Qué dos extensiones oficiales de Microsoft para Visual Studio Code destaca el tema para trabajar con contenedores?",
+        opts: [
+          "<code>Docker</code> y <code>Dev Containers</code>",
+          "<code>Kubernetes</code> y <code>WSL</code>",
+          "<code>Podman</code> y <code>GitLens</code>",
+          "<code>Azure CLI</code> y <code>Docker Hub</code>"
+        ],
+        ans: 0,
+        exp: "El tema destaca las extensiones de Microsoft <code>Docker</code> (gestión visual de contenedores/imágenes/Dockerfiles) y <code>Dev Containers</code> (abrir carpetas dentro de un contenedor)."
+      }
+    ];
+
+    // =========================================================================
+    // ESTADO PERSISTENTE Y LÓGICA DE LA APLICACIÓN
+    // =========================================================================
+    const STORAGE_KEY = 'docker_ud02_quiz_state_v1';
+
+    let state = {
+      mode: 'practice', // 'practice' | 'exam'
+      selectedCategory: 'ALL',
+      currentIndex: 0,
+      answers: {}, // { questionId: { selected: number, correct: boolean } }
+      failedIds: [], // array de IDs fallados alguna vez (se limpian al acertarlos)
+      streak: 0,
+      // Estado específico para el modo Simulacro (20 preguntas aleatorias)
+      examQueue: [],
+      examIndex: 0,
+      examAnswers: {}, // { questionId: selectedIndex }
+      examFinished: false
+    };
+
+    const CATEGORIES = [
+      { id: 'ALL', label: 'Todos los temas (105)' },
+      { id: 'FAILED', label: 'Solo Falladas' },
+      { id: '1. Conceptos, Historia y OCI', label: '1. Conceptos y OCI' },
+      { id: '2. Instalación: Desktop vs Engine', label: '2. Instalación' },
+      { id: '3. Ejecución y Gestión de Contenedores', label: '3. Contenedores' },
+      { id: '4. Imágenes, Capas y Registries', label: '4. Imágenes y Hub' },
+      { id: '5. Dockerfile, ENTRYPOINT, CMD, ARG/ENV', label: '5. Dockerfile' },
+      { id: '6. Volúmenes y Redes', label: '6. Volúmenes y Redes' },
+      { id: '7. Docker Compose y VS Code', label: '7. Compose y VS Code' }
+    ];
+
+    // Cargar estado desde localStorage
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          state = { ...state, ...parsed };
+        }
+      } catch (e) {
+        console.warn('No se pudo cargar el estado local:', e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.warn('No se pudo guardar el estado local:', e);
+      }
+    }
+
+    // =========================================================================
+    // CUENTA ATRÁS HASTA LAS 15:00 (3:00 PM)
+    // =========================================================================
+    function updateCountdown() {
+      const now = new Date();
+      const target = new Date(now);
+      target.setHours(15, 0, 0, 0);
+
+      // Si ya pasaron las 15:00 hoy, apunta a las 15:00 de mañana
+      if (now >= target) {
+        target.setDate(target.getDate() + 1);
+      }
+
+      const diff = target - now;
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      const pad = (n) => String(n).padStart(2, '0');
+      const el = document.getElementById('countdown-timer');
+      if (el) {
+        el.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+      }
+    }
+
+    // =========================================================================
+    // FILTRADO Y NAVEGACIÓN DE PREGUNTAS
+    // =========================================================================
+    function getFilteredQuestions() {
+      if (state.selectedCategory === 'ALL') {
+        return QUESTIONS;
+      }
+      if (state.selectedCategory === 'FAILED') {
+        return QUESTIONS.filter(q => state.failedIds.includes(q.id));
+      }
+      return QUESTIONS.filter(q => q.cat === state.selectedCategory);
+    }
+
+    function selectCategory(catId) {
+      state.selectedCategory = catId;
+      state.currentIndex = 0;
+      saveState();
+      renderAll();
+    }
+
+    function setMode(newMode) {
+      state.mode = newMode;
+      if (newMode === 'exam' && (!state.examQueue || state.examQueue.length === 0)) {
+        startNewExam();
+      }
+      saveState();
+      renderAll();
+    }
+
+    function startNewExam() {
+      const shuffled = [...QUESTIONS].sort(() => Math.random() - 0.5);
+      state.examQueue = shuffled.slice(0, 20).map(q => q.id);
+      state.examIndex = 0;
+      state.examAnswers = {};
+      state.examFinished = false;
+      saveState();
+      renderAll();
+    }
+
+    // =========================================================================
+    // RESPUESTAS E INTERACCIÓN
+    // =========================================================================
+    function handleAnswerPractice(questionId, optionIndex) {
+      // Si ya estaba respondida en este intento, permitimos reintentar o mantenemos bloqueo limpio
+      const question = QUESTIONS.find(q => q.id === questionId);
+      if (!question) return;
+
+      // Evitar doble clic sobre la misma respuesta ya registrada si no se ha pulsado "Reintentar"
+      if (state.answers[questionId]) return;
+
+      const isCorrect = optionIndex === question.ans;
+      state.answers[questionId] = {
+        selected: optionIndex,
+        correct: isCorrect
+      };
+
+      if (isCorrect) {
+        state.streak += 1;
+        state.failedIds = state.failedIds.filter(id => id !== questionId);
+      } else {
+        state.streak = 0;
+        if (!state.failedIds.includes(questionId)) {
+          state.failedIds.push(questionId);
+        }
+      }
+
+      saveState();
+      renderAll();
+    }
+
+    function retryPracticeQuestion(questionId) {
+      delete state.answers[questionId];
+      saveState();
+      renderAll();
+    }
+
+    function handleAnswerExam(questionId, optionIndex) {
+      if (state.examFinished) return;
+      state.examAnswers[questionId] = optionIndex;
+      saveState();
+      renderAll();
+    }
+
+    function nextQuestion() {
+      if (state.mode === 'practice') {
+        const list = getFilteredQuestions();
+        if (list.length === 0) return;
+        if (state.currentIndex < list.length - 1) {
+          state.currentIndex++;
+          saveState();
+          renderAll();
+        }
+      } else if (state.mode === 'exam' && !state.examFinished) {
+        if (state.examIndex < state.examQueue.length - 1) {
+          state.examIndex++;
+          saveState();
+          renderAll();
+        }
+      }
+    }
+
+    function prevQuestion() {
+      if (state.mode === 'practice') {
+        if (state.currentIndex > 0) {
+          state.currentIndex--;
+          saveState();
+          renderAll();
+        }
+      } else if (state.mode === 'exam' && !state.examFinished) {
+        if (state.examIndex > 0) {
+          state.examIndex--;
+          saveState();
+          renderAll();
+        }
+      }
+    }
+
+    function finishExam() {
+      state.examFinished = true;
+      // Registrar fallos del examen en la bolsa global de falladas para repaso posterior
+      state.examQueue.forEach(qId => {
+        const q = QUESTIONS.find(item => item.id === qId);
+        const userAns = state.examAnswers[qId];
+        if (q && userAns !== undefined && userAns !== q.ans) {
+          if (!state.failedIds.includes(qId)) {
+            state.failedIds.push(qId);
+          }
+        }
+      });
+      saveState();
+      renderAll();
+    }
+
+    // =========================================================================
+    // RENDERIZADO DE INTERFAZ
+    // =========================================================================
+    function updateHeaderStats() {
+      const answeredKeys = Object.keys(state.answers);
+      const totalAnswered = answeredKeys.length;
+      const correctCount = answeredKeys.filter(k => state.answers[k].correct).length;
+      const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
+      const progressPct = Math.round((totalAnswered / QUESTIONS.length) * 100);
+
+      document.getElementById('stat-accuracy').textContent = `${accuracy}%`;
+      document.getElementById('stat-streak').textContent = state.streak;
+      document.getElementById('global-progress-bar').style.width = `${progressPct}%`;
+      document.getElementById('progress-label').textContent = `${totalAnswered} / ${QUESTIONS.length} respondidas`;
+
+      // Actualizar botones de modo
+      const btnPractice = document.getElementById('btn-mode-practice');
+      const btnExam = document.getElementById('btn-mode-exam');
+      const catBar = document.getElementById('category-bar');
+
+      if (state.mode === 'practice') {
+        btnPractice.className = 'px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all bg-docker text-white shadow-sm';
+        btnExam.className = 'px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-400 hover:text-white transition-all';
+        catBar.classList.remove('hidden');
+      } else {
+        btnExam.className = 'px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all bg-docker text-white shadow-sm';
+        btnPractice.className = 'px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-400 hover:text-white transition-all';
+        catBar.classList.add('hidden');
+      }
+    }
+
+    function renderCategoryPills() {
+      const container = document.getElementById('category-bar');
+      container.innerHTML = CATEGORIES.map(cat => {
+        const isActive = state.selectedCategory === cat.id;
+        let label = cat.label;
+
+        if (cat.id === 'FAILED') {
+          label = `Solo Falladas (${state.failedIds.length})`;
+        }
+
+        const activeClasses = cat.id === 'FAILED'
+          ? 'bg-rose-500/20 text-rose-300 border-rose-500/50'
+          : 'bg-docker/20 text-docker-light border-docker/50';
+
+        const inactiveClasses = 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700';
+
+        return `
+          <button
+            onclick="selectCategory('${cat.id}')"
+            class="whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${isActive ? activeClasses : inactiveClasses}"
+          >
+            ${label}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderPracticeView() {
+      const container = document.getElementById('app-container');
+      const list = getFilteredQuestions();
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-10 text-center my-auto">
+            <div class="w-12 h-12 rounded-full bg-emerald-500/15 text-emerald-400 flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <h2 class="text-lg font-bold text-white mb-2">¡No tienes preguntas falladas pendientes!</h2>
+            <p class="text-sm text-slate-400 mb-6">Todas las preguntas que habías fallado ya han sido corregidas o aún no has registrado errores.</p>
+            <button onclick="selectCategory('ALL')" class="px-5 py-2.5 rounded-xl bg-docker hover:bg-docker-light text-white text-sm font-medium transition-colors">
+              Volver a las 105 preguntas
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      if (state.currentIndex >= list.length) {
+        state.currentIndex = 0;
+      }
+
+      const q = list[state.currentIndex];
+      const userState = state.answers[q.id];
+      const letters = ['A', 'B', 'C', 'D'];
+
+      const optionsHtml = q.opts.map((optText, idx) => {
+        let cardStyle = 'bg-slate-900/90 border-slate-800 hover:border-docker/60 hover:bg-slate-800/70 text-slate-200 cursor-pointer';
+        let badgeStyle = 'bg-slate-800 text-slate-300 border-slate-700';
+        let statusIcon = '';
+
+        if (userState) {
+          cardStyle = 'bg-slate-900/50 border-slate-800/80 text-slate-500 cursor-default';
+          if (idx === q.ans) {
+            cardStyle = 'bg-emerald-950/40 border-emerald-500/70 text-emerald-100';
+            badgeStyle = 'bg-emerald-500 text-slate-950 border-emerald-400 font-bold';
+            statusIcon = `<span class="ml-auto text-emerald-400 text-xs font-semibold flex items-center gap-1">✓ Correcta</span>`;
+          } else if (idx === userState.selected && !userState.correct) {
+            cardStyle = 'bg-rose-950/40 border-rose-500/70 text-rose-100';
+            badgeStyle = 'bg-rose-500 text-white border-rose-400 font-bold';
+            statusIcon = `<span class="ml-auto text-rose-400 text-xs font-semibold flex items-center gap-1">✕ Tu respuesta</span>`;
+          }
+        }
+
+        return `
+          <button
+            onclick="handleAnswerPractice(${q.id}, ${idx})"
+            ${userState ? 'disabled' : ''}
+            class="w-full text-left p-4 rounded-xl border transition-all flex items-start gap-3.5 ${cardStyle}"
+          >
+            <span class="w-7 h-7 rounded-lg border flex items-center justify-center text-xs font-mono shrink-0 mt-0.5 ${badgeStyle}">
+              ${letters[idx]}
+            </span>
+            <span class="text-sm sm:text-base leading-relaxed">${optText}</span>
+            ${statusIcon}
+          </button>
+        `;
+      }).join('');
+
+      const explanationHtml = userState ? `
+        <div class="mt-5 p-4 rounded-xl border ${userState.correct ? 'bg-emerald-950/25 border-emerald-800/60' : 'bg-amber-950/25 border-amber-800/60'}">
+          <div class="flex items-center justify-between gap-2 mb-1.5">
+            <span class="text-xs font-bold uppercase tracking-wider ${userState.correct ? 'text-emerald-400' : 'text-amber-400'}">
+              ${userState.correct ? '¡Respuesta Correcta!' : 'Explicación del temario'}
+            </span>
+            <button onclick="retryPracticeQuestion(${q.id})" class="text-xs text-slate-400 hover:text-white underline">
+              Reintentar pregunta
+            </button>
+          </div>
+          <p class="text-sm text-slate-300 leading-relaxed">${q.exp}</p>
+        </div>
+      ` : '';
+
+      container.innerHTML = `
+        <div class="bg-[#111827] border border-slate-800 rounded-2xl p-5 sm:p-7 shadow-xl flex flex-col">
+          <!-- Card Top Meta -->
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <span class="px-2.5 py-1 rounded-md bg-docker/15 text-docker-light border border-docker/30 text-xs font-medium">
+              ${q.cat}
+            </span>
+            <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+              <span>Pregunta #${q.id}</span>
+              <span>·</span>
+              <span class="text-slate-200 font-semibold">${state.currentIndex + 1} de ${list.length}</span>
+            </div>
+          </div>
+
+          <!-- Question Text -->
+          <h2 class="text-base sm:text-lg font-semibold text-white leading-snug mb-6">
+            ${q.q}
+          </h2>
+
+          <!-- Options -->
+          <div class="flex flex-col gap-3">
+            ${optionsHtml}
+          </div>
+
+          <!-- Immediate Feedback Explanation -->
+          ${explanationHtml}
+
+          <!-- Navigation Footer -->
+          <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between gap-3">
+            <button
+              onclick="prevQuestion()"
+              ${state.currentIndex === 0 ? 'disabled' : ''}
+              class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium border border-slate-700 text-slate-300 hover:bg-slate-800 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+            >
+              ← Anterior
+            </button>
+
+            <!-- Quick jump selector -->
+            <div class="flex items-center gap-2">
+              <label for="jump-select" class="text-xs text-slate-500 hidden sm:inline">Ir a:</label>
+              <select
+                id="jump-select"
+                onchange="state.currentIndex = Number(this.value); saveState(); renderAll();"
+                class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 font-mono focus:outline-none focus:border-docker"
+              >
+                ${list.map((item, i) => {
+                  const st = state.answers[item.id];
+                  const mark = st ? (st.correct ? '✓' : '✕') : '·';
+                  return `<option value="${i}" ${i === state.currentIndex ? 'selected' : ''}>${i + 1}. [#${item.id}] ${mark}</option>`;
+                }).join('')}
+              </select>
+            </div>
+
+            <button
+              onclick="nextQuestion()"
+              ${state.currentIndex >= list.length - 1 ? 'disabled' : ''}
+              class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium bg-docker hover:bg-docker-light text-white disabled:opacity-40 disabled:pointer-events-none transition-colors"
+            >
+              Siguiente →
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderExamView() {
+      const container = document.getElementById('app-container');
+      const letters = ['A', 'B', 'C', 'D'];
+
+      // Vista de resultados finales del simulacro
+      if (state.examFinished) {
+        let hits = 0;
+        const reviewHtml = state.examQueue.map((qId, idx) => {
+          const q = QUESTIONS.find(item => item.id === qId);
+          const userAns = state.examAnswers[qId];
+          const isCorrect = userAns === q.ans;
+          if (isCorrect) hits++;
+
+          return `
+            <div class="p-4 rounded-xl border ${isCorrect ? 'bg-emerald-950/20 border-emerald-800/50' : 'bg-rose-950/20 border-rose-800/50'}">
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <span class="text-xs font-mono text-slate-400">Pregunta ${idx + 1} (#${q.id}) · ${q.cat}</span>
+                <span class="text-xs font-bold ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}">
+                  ${isCorrect ? '✓ Acierto' : (userAns === undefined ? 'Sin responder' : '✕ Fallo')}
+                </span>
+              </div>
+              <p class="text-sm font-medium text-white mb-2">${q.q}</p>
+              <div class="text-xs space-y-1">
+                ${userAns !== undefined && !isCorrect ? `<p class="text-rose-300">Tu respuesta: <span class="font-semibold">${letters[userAns]}.</span> ${q.opts[userAns]}</p>` : ''}
+                <p class="text-emerald-300">Correcta: <span class="font-semibold">${letters[q.ans]}.</span> ${q.opts[q.ans]}</p>
+                <p class="text-slate-400 pt-1">${q.exp}</p>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        const grade = ((hits / state.examQueue.length) * 10).toFixed(2);
+        const passed = Number(grade) >= 5;
+
+        container.innerHTML = `
+          <div class="bg-[#111827] border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-800">
+              <div>
+                <span class="text-xs uppercase tracking-wider text-docker-light font-semibold">Resultado del Simulacro</span>
+                <h2 class="text-2xl font-bold text-white mt-1">Nota: <span class="${passed ? 'text-emerald-400' : 'text-rose-400'}">${grade} / 10</span></h2>
+                <p class="text-sm text-slate-400 mt-1">Has acertado <strong class="text-white">${hits}</strong> de ${state.examQueue.length} preguntas.</p>
+              </div>
+              <button onclick="startNewExam()" class="px-5 py-2.5 rounded-xl bg-docker hover:bg-docker-light text-white text-sm font-medium transition-colors">
+                Nuevo simulacro de 20 preguntas
+              </button>
+            </div>
+
+            <div class="mt-6 space-y-3 max-h-[55vh] overflow-y-auto pr-1">
+              ${reviewHtml}
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // Vista activa de examen (pregunta actual)
+      const currentQId = state.examQueue[state.examIndex];
+      const q = QUESTIONS.find(item => item.id === currentQId);
+      const selectedIdx = state.examAnswers[currentQId];
+      const answeredInExam = Object.keys(state.examAnswers).length;
+
+      const optionsHtml = q.opts.map((optText, idx) => {
+        const isSelected = selectedIdx === idx;
+        const cardStyle = isSelected
+          ? 'bg-docker/20 border-docker text-white'
+          : 'bg-slate-900/90 border-slate-800 hover:border-slate-600 text-slate-300';
+        const badgeStyle = isSelected
+          ? 'bg-docker text-white border-docker-light font-bold'
+          : 'bg-slate-800 text-slate-400 border-slate-700';
+
+        return `
+          <button
+            onclick="handleAnswerExam(${q.id}, ${idx})"
+            class="w-full text-left p-4 rounded-xl border transition-all flex items-start gap-3.5 ${cardStyle}"
+          >
+            <span class="w-7 h-7 rounded-lg border flex items-center justify-center text-xs font-mono shrink-0 mt-0.5 ${badgeStyle}">
+              ${letters[idx]}
+            </span>
+            <span class="text-sm sm:text-base leading-relaxed">${optText}</span>
+          </button>
+        `;
+      }).join('');
+
+      // Mini mapa de las 20 preguntas
+      const gridHtml = state.examQueue.map((id, i) => {
+        const hasAns = state.examAnswers[id] !== undefined;
+        const isCurr = i === state.examIndex;
+        let cls = 'bg-slate-900 text-slate-400 border-slate-800';
+        if (hasAns) cls = 'bg-docker/25 text-docker-light border-docker/50';
+        if (isCurr) cls += ' ring-2 ring-white';
+        return `<button onclick="state.examIndex=${i}; saveState(); renderAll();" class="w-7 h-7 rounded-md border text-xs font-mono ${cls}">${i + 1}</button>`;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="bg-[#111827] border border-slate-800 rounded-2xl p-5 sm:p-7 shadow-xl flex flex-col">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <span class="px-2.5 py-1 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30 text-xs font-medium">
+              Modo Simulacro · ${answeredInExam}/20 respondidas
+            </span>
+            <span class="text-xs font-mono text-slate-300 font-semibold">
+              Pregunta ${state.examIndex + 1} de 20
+            </span>
+          </div>
+
+          <h2 class="text-base sm:text-lg font-semibold text-white leading-snug mb-6">
+            ${q.q}
+          </h2>
+
+          <div class="flex flex-col gap-3">
+            ${optionsHtml}
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+            <button
+              onclick="prevQuestion()"
+              ${state.examIndex === 0 ? 'disabled' : ''}
+              class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium border border-slate-700 text-slate-300 hover:bg-slate-800 disabled:opacity-40 transition-colors"
+            >
+              ← Anterior
+            </button>
+
+            <button
+              onclick="finishExam()"
+              class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-colors"
+            >
+              Corregir Examen (${answeredInExam}/20)
+            </button>
+
+            <button
+              onclick="nextQuestion()"
+              ${state.examIndex >= state.examQueue.length - 1 ? 'disabled' : ''}
+              class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium bg-docker hover:bg-docker-light text-white disabled:opacity-40 transition-colors"
+            >
+              Siguiente →
+            </button>
+          </div>
+
+          <!-- Navegador rápido de las 20 preguntas -->
+          <div class="mt-5 pt-4 border-t border-slate-800/60 flex flex-wrap gap-1.5 justify-center">
+            ${gridHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAll() {
+      updateHeaderStats();
+      renderCategoryPills();
+      if (state.mode === 'practice') {
+        renderPracticeView();
+      } else {
+        renderExamView();
+      }
+    }
+
+    // =========================================================================
+    // MODAL DE REINICIO Y ATAJOS DE TECLADO
+    // =========================================================================
+    function openResetModal() {
+      const modal = document.getElementById('reset-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeResetModal() {
+      const modal = document.getElementById('reset-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function confirmResetProgress() {
+      localStorage.removeItem(STORAGE_KEY);
+      state = {
+        mode: 'practice',
+        selectedCategory: 'ALL',
+        currentIndex: 0,
+        answers: {},
+        failedIds: [],
+        streak: 0,
+        examQueue: [],
+        examIndex: 0,
+        examAnswers: {},
+        examFinished: false
+      };
+      closeResetModal();
+      renderAll();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      // Ignorar si hay algún modal abierto o foco en un select
+      const modalOpen = !document.getElementById('reset-modal').classList.contains('hidden');
+      if (modalOpen) return;
+
+      const key = e.key.toLowerCase();
+      const mapOption = { '1': 0, 'a': 0, '2': 1, 'b': 1, '3': 2, 'c': 2, '4': 3, 'd': 3 };
+
+      if (key in mapOption) {
+        const idx = mapOption[key];
+        if (state.mode === 'practice') {
+          const list = getFilteredQuestions();
+          if (list[state.currentIndex]) {
+            handleAnswerPractice(list[state.currentIndex].id, idx);
+          }
+        } else if (state.mode === 'exam' && !state.examFinished) {
+          const qId = state.examQueue[state.examIndex];
+          if (qId) handleAnswerExam(qId, idx);
+        }
+      } else if (e.key === 'ArrowRight' || e.key === 'Enter') {
+        if (document.activeElement.tagName !== 'BUTTON' && document.activeElement.tagName !== 'SELECT') {
+          nextQuestion();
+        }
+      } else if (e.key === 'ArrowLeft') {
+        if (document.activeElement.tagName !== 'SELECT') {
+          prevQuestion();
+        }
+      }
+    });
+
+    // Inicialización al cargar
+    window.onload = function () {
+      loadState();
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+      renderAll();
+    };
+  </script>
+</body>
+</html>
